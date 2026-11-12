@@ -1,4 +1,4 @@
-# DrishArt — A Virtual Art Gallery
+# DrishArt: A Virtual Art Gallery
 
 DrishArt is a small virtual museum created by me to share my passion for art. It brings my own original artworks into a 3D gallery, where visitors can walk around, view each piece, and send an enquiry.
 
@@ -11,7 +11,7 @@ DrishArt is a small virtual museum created by me to share my passion for art. It
 - Walk through the gallery using the keyboard or on-screen movement buttons.
 - Look around by dragging with a mouse or finger.
 - Select a painting to view its details and move between artworks.
-- Temporarily replace gallery images with your own. These replacements stay in the current browser session and reset when the page reloads.
+- Temporarily replace gallery images with your own to see how they look on the wall. These replacements stay in the current browser session and reset when the page reloads.
 - Send an enquiry about an artwork through the contact form.
 
 ## Technology
