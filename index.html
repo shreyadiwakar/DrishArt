@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Drishart · 3D Museum</title>
+    <link rel="preload" as="image" href="artworks/defaults/artwork-01.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-02.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-03.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-04.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-05.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-06.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-07.jpg" />
+    <link rel="preload" as="image" href="artworks/defaults/artwork-08.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body>
+    <canvas id="c" aria-label="3D gallery view"></canvas>
+    <div class="mark">DrishArt</div>
+    <div class="tb">
+      <button class="btn" id="addBtn">Add my images</button
+      ><input type="file" id="file" accept="image/*" multiple hidden />
+      <button
+        class="btn"
+        id="menuBtn"
+        aria-expanded="false"
+        aria-controls="list"
+      >
+        Works
+      </button>
+    </div>
+    <div id="list" role="menu"></div>
+    <div id="cap" aria-live="polite">
+      <b id="ct"></b><span id="ca"></span><span id="cm"></span>
+    </div>
+    <div class="pad">
+      <button class="btn" id="fw" aria-label="Walk forward">▲</button
+      ><button class="btn" id="lf" aria-label="Move left">◀</button
+      ><button class="btn" id="bk" aria-label="Walk back">▼</button
+      ><button class="btn" id="rt" aria-label="Move right">▶</button>
+    </div>
+    <div id="view" role="dialog" aria-modal="true" aria-labelledby="vt">
+      <div class="box">
+        <div class="vimg"><img alt="" /></div>
+        <div class="details">
+          <h2 id="vt"></h2>
+          <p id="va" class="mu"></p>
+          <dl id="vd"></dl>
+          <p id="vn"></p>
+          <div class="acts">
+            <button class="btn primary" id="enq">Enquire about this work</button
+            ><button class="btn" id="repl">Use my image</button
+            ><button class="btn" id="vprev">Previous</button
+            ><button class="btn" id="vnext">Next</button
+            ><button class="btn" id="vclose">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="enqm" role="dialog" aria-modal="true" aria-labelledby="eqt">
+      <div class="eb">
+        <h3 id="eqt">Enquire about this work</h3>
+        <p id="eqw" class="mu"></p>
+        <label for="eqn">Your name</label><input id="eqn" autocomplete="name" />
+        <label for="eqc">Your email or phone</label
+        ><input id="eqc" autocomplete="email" /> <label for="eqm">Message</label
+        ><textarea id="eqm" rows="4"></textarea>
+        <input
+          id="eqh"
+          tabindex="-1"
+          autocomplete="off"
+          aria-hidden="true"
+          style="
+            position: absolute;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+          "
+        />
+        <div class="acts">
+          <button class="btn primary" id="eqg">Send enquiry</button
+          ><button class="btn" id="eqx">Cancel</button>
+        </div>
+        <small id="eqs" aria-live="polite"></small>
+      </div>
+    </div>
+    <div id="intro">
+      <div>
+        <h1>Welcome to <b>DrishArt</b></h1>
+        <p>
+          DrishArt is a 3D virtual museum. Experience the 3D gallery from the
+          inside: walk through the hall and see the art up close. You can even
+          swap in your own images.
+        </p>
+        <button class="btn primary" id="enter">Enter the museum</button>
+        <h2>Controls</h2>
+        <div class="keys">
+          <span><kbd>↑</kbd><kbd>↓</kbd></span
+          ><span>Walk forward / back</span> <span><kbd>←</kbd><kbd>→</kbd></span
+          ><span>Rotate (turn) left / right</span>
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span
+          ><span>Walk forward, left, back, right</span>
+        </div>
+        <ul class="tips">
+          <li>Drag with the mouse or your finger to look around.</li>
+          <li>Use the keys above or the on-screen ▲ ◀ ▼ ▶ buttons to move.</li>
+          <li>Click or tap a painting to open it.</li>
+          <li>Use “Works” at the top to jump straight to any painting.</li>
+        </ul>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
