@@ -1,4 +1,4 @@
-﻿function rng(s) {
+function rng(s) {
   return function () {
     s |= 0;
     s = (s + 0x6d2b79f5) | 0;
@@ -103,7 +103,7 @@ const WORKS = [
     d: "Graphite",
     s: "16.5 × 11.7 in",
     pr: "₹10,000",
-    image: "artworks/defaults/artwork-01.jpg",
+    image: "defaults/artwork-01.jpg",
     g: "bands",
     w: 4,
     h: 3,
@@ -117,7 +117,7 @@ const WORKS = [
     d: "Acrylic",
     s: "11.7 × 16.5 in",
     pr: "₹8,000",
-    image: "artworks/defaults/artwork-03.jpg",
+    image: "defaults/artwork-03.jpg",
     g: "lines",
     w: 3,
     h: 4,
@@ -131,7 +131,7 @@ const WORKS = [
     d: "White pencil on black paper",
     s: "8.3 × 8.3 in",
     pr: "₹7,000",
-    image: "artworks/defaults/artwork-02.jpg",
+    image: "defaults/artwork-02.jpg",
     g: "circles",
     w: 1,
     h: 1,
@@ -145,7 +145,7 @@ const WORKS = [
     d: "Acrylic",
     s: "11.8 × 11.8 in",
     pr: "₹8,000",
-    image: "artworks/defaults/artwork-04.jpg",
+    image: "defaults/artwork-04.jpg",
     g: "bands",
     w: 15,
     h: 7,
@@ -159,7 +159,7 @@ const WORKS = [
     d: "Graphite",
     s: "8.3 × 11.7 in",
     pr: "₹9,000",
-    image: "artworks/defaults/artwork-05.jpg",
+    image: "defaults/artwork-05.jpg",
     g: "grid",
     w: 3,
     h: 4,
@@ -173,7 +173,7 @@ const WORKS = [
     d: "Acrylic",
     s: "16.5 × 11.7 in",
     pr: "₹12,000",
-    image: "artworks/defaults/artwork-07.jpg",
+    image: "defaults/artwork-07.jpg",
     g: "circles",
     w: 1,
     h: 1,
@@ -187,7 +187,7 @@ const WORKS = [
     d: "Graphite",
     s: "11.7 × 16.5 in",
     pr: "₹4,000",
-    image: "artworks/defaults/artwork-06.jpg",
+    image: "defaults/artwork-06.jpg",
     g: "arches",
     w: 3,
     h: 4,
@@ -201,7 +201,7 @@ const WORKS = [
     d: "Pencil Colour",
     s: "11.7 × 16.5 in",
     pr: "₹3,000",
-    image: "artworks/defaults/artwork-08.jpg",
+    image: "defaults/artwork-08.jpg",
     g: "arches",
     w: 5,
     h: 4,
@@ -845,13 +845,119 @@ function pick(e) {
   while (o && o.userData.i === undefined) o = o.parent;
   return o ? o.userData.i : -1;
 }
+function moveForward(delta) {
+  px += -Math.sin(yaw) * delta;
+  pz += -Math.cos(yaw) * delta;
+  px = Math.max(-HX + 0.6, Math.min(HX - 0.6, px));
+  pz = Math.max(-HZ + 0.9, Math.min(HZ - 0.9, pz));
+  const d = Math.hypot(px, pz);
+  if (d < 1.5) {
+    px = (px / d) * 1.5;
+    pz = (pz / d) * 1.5;
+  }
+  cam.position.set(px, 1.65, pz);
+  tween = null;
+}
+
+// Touch controls for mobile (smooth 1-finger look around & 2-finger pinch forward/backward)
+let touchStartDist = null;
+let touchMoved = false;
+
+canvas.addEventListener(
+  "touchstart",
+  (e) => {
+    if (e.touches.length === 1) {
+      const t = e.touches[0];
+      down = { x: t.clientX, y: t.clientY };
+      drag = { x: t.clientX, y: t.clientY };
+      touchStartDist = null;
+      touchMoved = false;
+    } else if (e.touches.length >= 2) {
+      if (e.cancelable) e.preventDefault();
+      drag = null;
+      down = null;
+      touchMoved = true;
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      touchStartDist = Math.hypot(
+        t1.clientX - t2.clientX,
+        t1.clientY - t2.clientY,
+      );
+    }
+  },
+  { passive: false },
+);
+
+canvas.addEventListener(
+  "touchmove",
+  (e) => {
+    if (e.cancelable) e.preventDefault();
+
+    if (e.touches.length >= 2 && touchStartDist !== null) {
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const currentDist = Math.hypot(
+        t1.clientX - t2.clientX,
+        t1.clientY - t2.clientY,
+      );
+      const diff = currentDist - touchStartDist;
+      if (Math.abs(diff) > 0.5) {
+        moveForward(diff * 0.025);
+        touchStartDist = currentDist;
+      }
+      return;
+    }
+
+    if (e.touches.length === 1 && drag) {
+      const t = e.touches[0];
+      const dx = t.clientX - drag.x;
+      const dy = t.clientY - drag.y;
+      if (down && Math.hypot(t.clientX - down.x, t.clientY - down.y) > 6) {
+        touchMoved = true;
+      }
+      yaw += dx * 0.005;
+      pitch = Math.max(-1.1, Math.min(1.1, pitch + dy * 0.004));
+      drag = { x: t.clientX, y: t.clientY };
+      tween = null;
+    }
+  },
+  { passive: false },
+);
+
+canvas.addEventListener("touchend", (e) => {
+  if (e.touches.length === 0) {
+    if (down && !touchMoved) {
+      const i = pick({ clientX: down.x, clientY: down.y });
+      if (i >= 0) openV(i);
+    }
+    drag = null;
+    down = null;
+    touchStartDist = null;
+  } else if (e.touches.length === 1) {
+    const t = e.touches[0];
+    drag = { x: t.clientX, y: t.clientY };
+    down = null;
+    touchMoved = true;
+    touchStartDist = null;
+  }
+});
+
+canvas.addEventListener("touchcancel", () => {
+  drag = null;
+  down = null;
+  touchStartDist = null;
+});
+
+// Mouse controls for desktop / laptop
 canvas.addEventListener("pointerdown", (e) => {
+  if (e.pointerType === "touch") return;
   down = { x: e.clientX, y: e.clientY };
   drag = { x: e.clientX, y: e.clientY };
   canvas.setPointerCapture(e.pointerId);
   canvas.style.cursor = "grabbing";
 });
 canvas.addEventListener("pointermove", (e) => {
+  if (e.pointerType === "touch") return;
   if (!drag) {
     canvas.style.cursor = pick(e) >= 0 ? "pointer" : "grab";
     return;
@@ -862,6 +968,7 @@ canvas.addEventListener("pointermove", (e) => {
   tween = null;
 });
 canvas.addEventListener("pointerup", (e) => {
+  if (e.pointerType === "touch") return;
   const moved = down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6;
   drag = null;
   canvas.style.cursor = "grab";
@@ -871,7 +978,8 @@ canvas.addEventListener("pointerup", (e) => {
   }
   down = null;
 });
-canvas.addEventListener("pointercancel", () => {
+canvas.addEventListener("pointercancel", (e) => {
+  if (e.pointerType === "touch") return;
   drag = null;
   down = null;
   canvas.style.cursor = "grab";
@@ -952,7 +1060,15 @@ function openV(i) {
   cap.classList.remove("on");
   shown = -1;
   V.classList.add("on");
-  document.getElementById("vclose").focus();
+  const box = V.querySelector(".box");
+  if (box) box.scrollTop = 0;
+  const details = V.querySelector(".details");
+  if (details) details.scrollTop = 0;
+  try {
+    document.getElementById("vclose").focus({ preventScroll: true });
+  } catch (_) {
+    document.getElementById("vclose").focus();
+  }
 }
 function closeV() {
   EM.classList.remove("on");
@@ -1106,18 +1222,50 @@ document.getElementById("repl").onclick = () => {
 WORKS.forEach((w, i) => {
   setImage(i, w.image);
 });
+function isPhoneDevice() {
+  const ua = navigator.userAgent || "";
+  if (/Android|iPhone|iPod|Mobile/i.test(ua)) return true;
+  if (
+    navigator.maxTouchPoints > 0 &&
+    Math.min(window.screen.width, window.screen.height) <= 600
+  ) {
+    return true;
+  }
+  if (window.innerWidth <= 600 && window.innerHeight > window.innerWidth) {
+    return true;
+  }
+  return false;
+}
 function resize() {
   const w = innerWidth,
     h = innerHeight;
+  const onPhone = isPhoneDevice();
+  if (onPhone) {
+    document.body.classList.add("is-phone");
+  } else {
+    document.body.classList.remove("is-phone");
+  }
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(w, h, false);
   cam.aspect = w / h;
-  const horizontalFov = 120;
-  cam.fov =
-    (2 *
-      Math.atan(Math.tan((horizontalFov * Math.PI) / 360) / (w / h)) *
-      180) /
-    Math.PI;
+  if (onPhone && h > w) {
+    // Phone in portrait: tighter horizontal FOV (~64°) so artworks are clearly zoomed in and prominent
+    // instead of the widescreen 120° that ballooned vertical FOV to 151° (making artworks tiny).
+    const baseHFov = 64;
+    cam.fov =
+      (2 *
+        Math.atan(Math.tan((baseHFov * Math.PI) / 360) / (w / h)) *
+        180) /
+      Math.PI;
+  } else {
+    // Laptop / Desktop (or landscape): 100% UNCHANGED, preserving the exact original view
+    const horizontalFov = 120;
+    cam.fov =
+      (2 *
+        Math.atan(Math.tan((horizontalFov * Math.PI) / 360) / (w / h)) *
+        180) /
+      Math.PI;
+  }
   cam.updateProjectionMatrix();
 }
 addEventListener("resize", resize);

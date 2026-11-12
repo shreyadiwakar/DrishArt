@@ -6,15 +6,16 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
+    <meta name="color-scheme" content="light" />
     <title>Drishart · 3D Museum</title>
-    <link rel="preload" as="image" href="artworks/defaults/artwork-01.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-02.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-03.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-04.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-05.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-06.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-07.jpg" />
-    <link rel="preload" as="image" href="artworks/defaults/artwork-08.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-01.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-02.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-03.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-04.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-05.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-06.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-07.jpg" />
+    <link rel="preload" as="image" href="defaults/artwork-08.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -107,20 +108,31 @@
           swap in your own images.
         </p>
         <button class="btn primary" id="enter">Enter the museum</button>
-        <h2>Controls</h2>
-        <div class="keys">
-          <span><kbd>↑</kbd><kbd>↓</kbd></span
-          ><span>Walk forward / back</span> <span><kbd>←</kbd><kbd>→</kbd></span
-          ><span>Rotate (turn) left / right</span>
-          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span
-          ><span>Walk forward, left, back, right</span>
+        <div class="desktop-controls">
+          <h2>Controls</h2>
+          <div class="keys">
+            <span><kbd>↑</kbd><kbd>↓</kbd></span
+            ><span>Walk forward / back</span> <span><kbd>←</kbd><kbd>→</kbd></span
+            ><span>Rotate (turn) left / right</span>
+            <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span
+            ><span>Walk forward, left, back, right</span>
+          </div>
+          <ul class="tips">
+            <li>Drag with the mouse to look around.</li>
+            <li>Click a painting to view details and enquire.</li>
+            <li>Use “Works” at the top to jump straight to any painting.</li>
+          </ul>
         </div>
-        <ul class="tips">
-          <li>Drag with the mouse or your finger to look around.</li>
-          <li>Use the keys above or the on-screen ▲ ◀ ▼ ▶ buttons to move.</li>
-          <li>Click or tap a painting to open it.</li>
-          <li>Use “Works” at the top to jump straight to any painting.</li>
-        </ul>
+        <div class="mobile-controls">
+          <h2>Controls</h2>
+          <ul class="tips">
+            <li>Use the on-screen <b>▲ ◀ ▼ ▶</b> buttons to walk and move.</li>
+            <li>Drag with your finger to look around.</li>
+            <li>Tap any painting to view its details and enquire.</li>
+            <li>Pinch with two fingers to move forward or backward.</li>
+            <li>Use <b>“Works”</b> at the top to jump straight to any painting.</li>
+          </ul>
+        </div>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>

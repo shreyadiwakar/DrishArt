@@ -29,7 +29,6 @@ DrishArt/
 │   ├── css/styles.css         # Gallery and dialog styles
 │   ├── js/app.js              # Artwork data, 3D scene, and interactions
 │   └── sculpture.png          # Texture used by the central sculpture
-├── artworks/
-│   └── defaults/              # Eight optimized photos of my artworks
+├── defaults/                  # Eight optimized photos of my artworks
 └── README.md
 ```
